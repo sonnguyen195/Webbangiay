@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Facebook;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +12,17 @@ namespace Webbansach.Controllers
     {
         dbQLBansachDataContext data = new dbQLBansachDataContext();
         // GET: Nguoidung
+        private Uri RedirectUri
+        {
+            get
+            {
+                var uriBuilder = new UriBuilder(Request.Url);
+                uriBuilder.Query = null;
+                uriBuilder.Fragment = null;
+                uriBuilder.Path = Url.Action("FacebookCallback");
+                return uriBuilder.Uri;
+            }
+        }
         public ActionResult Index()
         {
             return View();
@@ -105,12 +118,61 @@ namespace Webbansach.Controllers
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
                     Session["Taikhoan"] = kh;
-                    return RedirectToAction("Index", "BookStore");
+                    return RedirectToAction("Index", "ShoeStore");
                 }
                 else
                     ViewBag.Thongbao = "Tên đăng nhập hoặc mật khẩu không đúng";
             }
             return View();
+        }
+        public ActionResult DangNhapFB()
+        {
+            var fb = new FacebookClient();
+            var loginUrl = fb.GetLoginUrl(new
+            {
+                client_id = ConfigurationManager.AppSettings["fbAppId"],
+                client_key = ConfigurationManager.AppSettings["fbAppKey"],
+                redirect_uri = RedirectUri.AbsoluteUri,
+                response_type="code",
+                scope="email"
+            });
+            return Redirect(loginUrl.AbsoluteUri);
+
+
+        }
+        public ActionResult FacebookCallback(string code)
+        {
+            var fb = new FacebookClient();
+            dynamic result = fb.Post("/oauth/access_token", new
+            {
+                client_id = ConfigurationManager.AppSettings["fbAppId"],
+                client_key = ConfigurationManager.AppSettings["fbAppKey"],
+                redirect_uri = RedirectUri.AbsoluteUri,
+                code = code
+            });
+            var accessToken = result.access_token;
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                fb.AccessToken = accessToken;
+                dynamic me = fb.Get("me?fields=first_name,middle_name,last_name,id,email");
+                string email = me.email;
+                string first_name = me.first_name;
+                string middle_name = me.middle_name;
+                string last_name = me.last_name;
+                string id = me.id;
+                KHACHHANG kh = data.KHACHHANGs.SingleOrDefault(n => n.Taikhoan == email && n.Matkhau == email);
+                if (kh != null)
+                {
+                    // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
+                    Session["Taikhoan"] = kh;
+                    return RedirectToAction("Index", "ShoeStore");
+                }
+                else
+                    ViewBag.Thongbao = "Tên đăng nhập hoặc mật khẩu không đúng";
+
+            }
+            return RedirectToAction("Index", "ShoeStore");
+
         }
     }
 }
