@@ -4,10 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Webbansach.Models;
+
 namespace Webbansach.Controllers
 {
-    public class NhaxuatbanController : Controller
+    public class SanPhamController : Controller
     {
+        // GET: SanPham
         dbQLBansachDataContext data = new dbQLBansachDataContext();
         // 1. Hiện thi danh sách Nhà xuất bản
         public ActionResult Index()
@@ -15,7 +17,7 @@ namespace Webbansach.Controllers
             if (Session["Taikhoanadmin"] == null)
                 return RedirectToAction("Login", "Admin");
             else
-                return View(data.NHAXUATBANs.ToList());
+                return View(data.SACHes.ToList());
         }
         //2. Thêm mới 1 Nhà xuất bản
         [HttpGet]
@@ -27,26 +29,26 @@ namespace Webbansach.Controllers
                 return View();
         }
         [HttpPost]
-        public ActionResult Create(NHAXUATBAN nhaxuatban)
+        public ActionResult Create(SACH sach)
         {
             if (Session["Taikhoanadmin"] == null)
                 return RedirectToAction("Login", "Admin");
             else
             {
-                data.NHAXUATBANs.InsertOnSubmit(nhaxuatban);
+                data.SACHes.InsertOnSubmit(sach);
                 data.SubmitChanges();
-                return RedirectToAction("Index", "Nhaxuatban");
+                return RedirectToAction("Index", "SanPham");
             }
         }
         //3. Xem chi tiết thông tin 1 Nhà xuất bản
-        public ActionResult Details (int id)
+        public ActionResult Details(int id)
         {
             if (Session["Taikhoanadmin"] == null)
                 return RedirectToAction("Login", "Admin");
             else
             {
-                var nhaxuatban = from nxb in data.NHAXUATBANs where nxb.MaNXB == id select nxb;
-                return View(nhaxuatban.SingleOrDefault());
+                var sach = from s in data.SACHes where s.Masach == id select s;
+                return View(sach.SingleOrDefault());
             }
         }
         //4. Xóa 1 Nhà xuất bản
@@ -56,8 +58,8 @@ namespace Webbansach.Controllers
                 return RedirectToAction("Login", "Admin");
             else
             {
-                var nhaxuatban = from nxb in data.NHAXUATBANs where nxb.MaNXB == id select nxb;
-                return View(nhaxuatban.SingleOrDefault());
+                var sach = from s in data.SACHes where s.Masach == id select s;
+                return View(sach.SingleOrDefault());
             }
         }
         [HttpPost, ActionName("Delete")]
@@ -67,10 +69,10 @@ namespace Webbansach.Controllers
                 return RedirectToAction("Login", "Admin");
             else
             {
-                NHAXUATBAN nhaxuatban = data.NHAXUATBANs.SingleOrDefault(n => n.MaNXB==id);
-                data.NHAXUATBANs.DeleteOnSubmit(nhaxuatban);
+                SACH sach = data.SACHes.SingleOrDefault(n => n.Masach == id);
+                data.SACHes.DeleteOnSubmit(sach);
                 data.SubmitChanges();
-                return RedirectToAction("Index", "Nhaxuatban");
+                return RedirectToAction("Index", "SanPham");
             }
         }
         //5. Điều chỉnh thông tin 1 Nhà xuất bản
@@ -80,8 +82,8 @@ namespace Webbansach.Controllers
                 return RedirectToAction("Login", "Admin");
             else
             {
-                var nhaxuatban = from nxb in data.NHAXUATBANs where nxb.MaNXB == id select nxb;
-                return View(nhaxuatban.SingleOrDefault());
+                var sach = from s in data.SACHes where s.Masach == id select s;
+                return View(sach.SingleOrDefault());
             }
         }
         //Do tên Action trùng tên, nên cần tên bí doanh
@@ -92,12 +94,13 @@ namespace Webbansach.Controllers
                 return RedirectToAction("Login", "Admin");
             else
             {
-                NHAXUATBAN nhaxuatban = data.NHAXUATBANs.SingleOrDefault(n => n.MaNXB == id);
+                SACH sach = data.SACHes.SingleOrDefault(n => n.Masach == id);
 
-                UpdateModel(nhaxuatban);
+                UpdateModel(sach);
                 data.SubmitChanges();
-                return RedirectToAction("Index", "Nhaxuatban");
+                return RedirectToAction("Index", "SanPham");
             }
         }
+
     }
 }
