@@ -131,7 +131,7 @@ namespace Webbansach.Controllers
             var loginUrl = fb.GetLoginUrl(new
             {
                 client_id = ConfigurationManager.AppSettings["fbAppId"],
-                client_key = ConfigurationManager.AppSettings["fbAppKey"],
+                client_secret = ConfigurationManager.AppSettings["fbAppKey"],
                 redirect_uri = RedirectUri.AbsoluteUri,
                 response_type="code",
                 scope="email"
@@ -146,7 +146,7 @@ namespace Webbansach.Controllers
             dynamic result = fb.Post("/oauth/access_token", new
             {
                 client_id = ConfigurationManager.AppSettings["fbAppId"],
-                client_key = ConfigurationManager.AppSettings["fbAppKey"],
+                client_secret = ConfigurationManager.AppSettings["fbAppKey"],
                 redirect_uri = RedirectUri.AbsoluteUri,
                 code = code
             });
@@ -173,6 +173,25 @@ namespace Webbansach.Controllers
             }
             return RedirectToAction("Index", "ShoeStore");
 
+        }
+        public RedirectToRouteResult GoogleLogin(string email, string name, string gender, string lastname, string location)
+        {
+            //Write your code here to access these paramerters
+            if (!string.IsNullOrEmpty(email))
+            {
+                KHACHHANG kh = data.KHACHHANGs.SingleOrDefault(n => n.Taikhoan == email && n.Matkhau == email);
+                if (kh != null)
+                {
+                    // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
+                    Session["Taikhoan"] = kh;
+                    return RedirectToAction("Index", "ShoeStore");
+                }
+                else
+                    ViewBag.Thongbao = "Tên đăng nhập hoặc mật khẩu không đúng";
+
+                
+            }
+            return RedirectToAction("Index", "ShoeStore");
         }
     }
 }
