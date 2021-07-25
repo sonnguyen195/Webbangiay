@@ -117,7 +117,7 @@ namespace Webbansach.Controllers
                 if (kh != null)
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
-                    Session["Taikhoan"] = kh;
+                    Session["Taikhoan"] = kh.HoTen;
                     return RedirectToAction("Index", "ShoeStore");
                 }
                 else
@@ -169,7 +169,7 @@ namespace Webbansach.Controllers
                 if (kh != null)
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
-                    Session["Taikhoan"] = kh;
+                    Session["Taikhoan"] = kh.HoTen;
                     return RedirectToAction("Index", "ShoeStore");
                 }
                 else
@@ -187,7 +187,7 @@ namespace Webbansach.Controllers
                 if (kh != null)
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
-                    Session["Taikhoan"] = kh;
+                    Session["Taikhoan"] = kh.Email;
                     return RedirectToAction("Index", "ShoeStore");
                 }
                 else
