@@ -53,17 +53,21 @@
                     <li>
                         <a href="#">LIÊN HỆ</a>
                     </li>
-                    <li>
-                        <a href="@Url.Action("Dangky","Nguoidung")">ĐĂNG KÝ</a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Dangnhap","Nguoidung")">ĐĂNG NHẬP</a>
-                    </li>
+                    @if (Session["Taikhoan"] == null)
+                    {
+                        <li>
+                            <a href="@Url.Action("Dangky","Nguoidung")">ĐĂNG KÝ</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Dangnhap","Nguoidung")">ĐĂNG NHẬP</a>
+                        </li>
+                    }
+
                     <li>
                         @Html.Action("GiohangPartial", "Giohang")
                     </li>
                     <li>
-                        <a href="#"> Xin chào bạn @Session["Taikhoan"] </a>
+                        <a href="@Url.Action("Dangxuat","Nguoidung")"> Xin chào bạn @Session["Taikhoan"] </a>
                     </li>
                 </ul>
             </div>

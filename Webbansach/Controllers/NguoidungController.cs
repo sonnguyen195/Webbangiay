@@ -140,7 +140,7 @@ namespace Webbansach.Controllers
 
 
         }
-        public ActionResult FacebookCallback(string code)
+        public ActionResult FacebookCallback(string code,KHACHHANG kh)
         {
             var fb = new FacebookClient();
             dynamic result = fb.Post("/oauth/access_token", new
@@ -160,7 +160,13 @@ namespace Webbansach.Controllers
                 string middle_name = me.middle_name;
                 string last_name = me.last_name;
                 string id = me.id;
-                KHACHHANG kh = data.KHACHHANGs.SingleOrDefault(n => n.Taikhoan == email && n.Matkhau == email);
+                data.KHACHHANGs.SingleOrDefault(n => n.Taikhoan == email && n.Matkhau == email);
+                kh.HoTen = first_name+middle_name;
+                kh.Taikhoan = email;
+                kh.Matkhau = id;
+                kh.Email = email;
+                data.KHACHHANGs.InsertOnSubmit(kh);
+                data.SubmitChanges();
                 if (kh != null)
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
@@ -174,11 +180,10 @@ namespace Webbansach.Controllers
             return RedirectToAction("Index", "ShoeStore");
 
         }
-        public RedirectToRouteResult GoogleLogin(string email, string name, string gender, string lastname, string location)
+        public ActionResult GoogleLogin(string email, string name, string gender, string lastname, string location)
         {
             //Write your code here to access these paramerters
-            if (!string.IsNullOrEmpty(email))
-            {
+           
                 KHACHHANG kh = data.KHACHHANGs.SingleOrDefault(n => n.Taikhoan == email && n.Matkhau == email);
                 if (kh != null)
                 {
@@ -190,8 +195,14 @@ namespace Webbansach.Controllers
                     ViewBag.Thongbao = "Tên đăng nhập hoặc mật khẩu không đúng";
 
                 
-            }
+            
             return RedirectToAction("Index", "ShoeStore");
+        }
+        public ActionResult Dangxuat()
+        {
+            Session["Taikhoan"] = null;
+            return RedirectToAction("Index", "ShoeStore");
+
         }
     }
 }

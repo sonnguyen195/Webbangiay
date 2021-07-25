@@ -74,25 +74,6 @@
         }
 
         function getUserInfo() {
-
-
-            $.ajax({
-
-                url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
-                data: null,
-                success: function (resp) {
-                    user = resp;
-                    console.log(user);
-                    $('#uname').html('Welcome ' + user.name);
-                    $('#uemail').html('Email: ' + user.email)
-                    $('#imgHolder').attr('src', user.picture);
-
-
-                },
-
-
-            }),
-
             $.ajax({
 
                 url: '/Nguoidung/GoogleLogin/',
@@ -106,11 +87,8 @@
                     location: user.location
                 },
                 success: function () {
-                    window.location.href = "/Home/Index/";
+                    window.close();
                 },
-
-                //dataType: "jsonp"
-
             });
 
 
@@ -154,7 +132,7 @@
                 <a href="/Nguoidung/DangNhapFB" class="btn btn-facebook"><i class="fa fa-facebook">Login with FaceBook</i></a>
             </td>
             <td>
-                <a href="/Nguoidung/GoogleLogin" class="btn btn-google"  onclick="login()"><i class="fa fa-google">Login with Google</i></a>
+                <a  class="btn btn-google"  onclick="login()"><i class="fa fa-google">Login with Google</i></a>
             </td>
         </tr>
     }
