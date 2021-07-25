@@ -165,8 +165,7 @@ namespace Webbansach.Controllers
                 kh.Taikhoan = email;
                 kh.Matkhau = id;
                 kh.Email = email;
-                data.KHACHHANGs.InsertOnSubmit(kh);
-                data.SubmitChanges();
+               
                 if (kh != null)
                 {
                     // ViewBag.Thongbao = "Chúc mừng đăng nhập thành công";
